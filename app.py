@@ -61,43 +61,55 @@ overall_weighted_fat = st.number_input("Overall Weighted FAT", min_value=0.0, st
 overall_weighted_snf = st.number_input("Overall Weighted SNF", min_value=0.0, step=0.1)
 overall_weighted_avg = st.number_input("Overall Weighted Average", min_value=0.0, step=0.1)
 
-if st.button("Predict"):
+if st.button("Predict for All Societies"):
+
     results = []
-    for qty, name in zip(quantities, societies):
-        fat_pred = predict(fat_model, fat_in_scaler, fat_out_scaler, [qty, overall_weighted_fat])
-        snf_pred = predict(snf_model, snf_in_scaler, snf_out_scaler, [qty, overall_weighted_snf])
-        wa_pred  = predict(wa_model, wa_in_scaler, wa_out_scaler, [qty, overall_weighted_avg])
+
+    # Prepare base arrays
+    qty_array = np.array(quantities)  # [Eraiyur, Naripalayam, Ellaigramam, Kadiyar, Kolathur]
+
+    for i, society in enumerate(societies):
+
+        # --- FAT MODEL ---
+        fat_input = np.array([[overall_weighted_fat, overall_weighted_fat, *qty_array]])
+        fat_input_scaled = fat_in_scaler.transform(fat_input)
+        fat_pred_scaled = fat_model.predict(fat_input_scaled)
+        fat_pred = fat_out_scaler.inverse_transform(fat_pred_scaled)[0][i]
+
+        # --- SNF MODEL ---
+        snf_input = np.array([[overall_weighted_snf, overall_weighted_snf, *qty_array]])
+        snf_input_scaled = snf_in_scaler.transform(snf_input)
+        snf_pred_scaled = snf_model.predict(snf_input_scaled)
+        snf_pred = snf_out_scaler.inverse_transform(snf_pred_scaled)[0][i]
+
+        # --- WEIGHTED AVERAGE MODEL ---
+        wa_input = np.array([[overall_weighted_avg, *qty_array]])
+        wa_input_scaled = wa_in_scaler.transform(wa_input)
+        wa_pred_scaled = wa_model.predict(wa_input_scaled)
+        wa_pred = wa_out_scaler.inverse_transform(wa_pred_scaled)[0][i]
 
         results.append({
-            "Society": name,
-            "Quantity": qty,
+            "Society": society,
+            "Quantity": qty_array[i],
             "Pred_Weighted_FAT": round(fat_pred, 2),
             "Pred_Weighted_SNF": round(snf_pred, 2),
             "Pred_Weighted_Avg": round(wa_pred, 2)
         })
 
+    # Create DataFrame
     df = pd.DataFrame(results)
 
-    # Summary rows
-    totals = {
-        "Society": "TOTAL",
-        "Quantity": df["Quantity"].sum(),
-        "Pred_Weighted_FAT": df["Pred_Weighted_FAT"].sum(),
-        "Pred_Weighted_SNF": df["Pred_Weighted_SNF"].sum(),
-        "Pred_Weighted_Avg": df["Pred_Weighted_Avg"].sum()
-    }
-    averages = {
-        "Society": "AVERAGE",
-        "Quantity": df["Quantity"].mean(),
-        "Pred_Weighted_FAT": df["Pred_Weighted_FAT"].mean(),
-        "Pred_Weighted_SNF": df["Pred_Weighted_SNF"].mean(),
-        "Pred_Weighted_Avg": df["Pred_Weighted_Avg"].mean()
-    }
+    # Add totals and averages
+    total_qty = df["Quantity"].sum()
+    avg_fat = df["Pred_Weighted_FAT"].mean()
+    avg_snf = df["Pred_Weighted_SNF"].mean()
+    avg_wa = df["Pred_Weighted_Avg"].mean()
 
-    df = pd.concat([df, pd.DataFrame([totals, averages])], ignore_index=True)
+    df.loc[len(df)] = ["TOTAL / AVERAGE", total_qty, avg_fat, avg_snf, avg_wa]
 
-    st.subheader("Prediction Results")
-    st.dataframe(df, use_container_width=True)
+    # Show results
+    st.subheader("Predicted Results for Each Society")
+    st.dataframe(df)
 
-    csv = df.to_csv(index=False).encode('utf-8')
-    st.download_button("⬇️ Download as CSV", data=csv, file_name="milk_predictions.csv", mime="text/csv")
+    csv = df.to_csv(index=False).encode("utf-8")
+    st.download_button("⬇️ Download Results as CSV", csv, "milk_society_predictions.csv", "text/csv")
