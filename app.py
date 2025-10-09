@@ -36,6 +36,7 @@ wa_out_scaler  = load_file("weighted_Average_output_scaler_original_data.joblib"
 # ------------------------------
 st.title("🥛 Milk Quality Prediction App")
 st.write("Predict FAT, SNF, and Weighted Average for 5 societies using overall values.")
+date=st.date_input("Date")
 
 societies = ["Eraiyur", "Naripalayam", "Ellaigramam", "Kadiyar", "Kolathur"]
 
@@ -104,6 +105,8 @@ if st.button("Predict for All Societies"):
 
 
     df.loc[len(df)] = ["TOTAL", total_qty, total_weighted_fat, total_weighted_snf, total_wa,total_fat,total_snf]
+    multi_cols = pd.MultiIndex.from_product([[date], df.columns])
+    df.columns = multi_cols
 
     # Show results
     st.subheader("Predicted Results for Each Society")
