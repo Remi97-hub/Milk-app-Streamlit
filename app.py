@@ -98,7 +98,7 @@ if st.button("Predict for All Societies"):
     total_weighted_snf = df["Pred_Weighted_SNF"].sum()
     total_wa = df["Pred_Weighted_Avg"].sum()
     df['Fat']=df['Pred_Weighted_FAT']*100/df['Quantity']
-    df['SNF']=df['Pred_Weighted_FAT']*100/df['Quantity']
+    df['SNF']=df['Pred_Weighted_SNF']*100/df['Quantity']
     total_fat=df['Fat'].sum()
     total_snf=df['SNF'].sum()
 
