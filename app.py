@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import os
 
-st.set_page_config(page_title="Milk Society Prediction App", layout="wide")
+st.set_page_config(page_title="Milk Quality Prediction App", layout="wide")
 
 # ------------------------------
 # Helper: Safe load function
