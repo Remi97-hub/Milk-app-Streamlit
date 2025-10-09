@@ -48,9 +48,9 @@ for i, s in enumerate(societies):
         quantities.append(q)
 
 st.header("Enter Overall Weighted Values")
-overll_fat=st.number_input("Overall Fat",min_value=0.0)
+overall_fat=st.number_input("Overall Fat",min_value=0.0)
 overall_weighted_fat = st.number_input("Overall Weighted FAT", min_value=0.0)
-overll_snf=st.number_input("Overall SNF",min_value=0.0)
+overall_snf=st.number_input("Overall SNF",min_value=0.0)
 overall_weighted_snf = st.number_input("Overall Weighted SNF", min_value=0.0)
 overall_weighted_avg = st.number_input("Overall Weighted Average", min_value=0.0)
 
