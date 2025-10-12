@@ -56,12 +56,15 @@ fat_in=np.array([[overall_fat,overall_weighted_fat,*quantities]])
 snf_in=np.array([[overall_snf,overall_weighted_snf,*quantities]])
 wa_in=np.array([[overall_wa,*quantities]])
 
-fat_in_sc=fat_in_scaler.transform(fat_in)
-snf_in_sc=snf_in_scaler.transform(snf_in)
-wa_in_sc=wa_in_scaler.transform(wa_in)
+#fat_in_sc=fat_in_scaler.transform(fat_in)
+#snf_in_sc=snf_in_scaler.transform(snf_in)
+#wa_in_sc=wa_in_scaler.transform(wa_in)
 
 #result=[]
 if st.button("Calculate"):
+    fat_in_sc=fat_in_scaler.transform(fat_in)
+    snf_in_sc=snf_in_scaler.transform(snf_in)
+    wa_in_sc=wa_in_scaler.transform(wa_in)
     fat_pred=fat_model.predict(fat_in_sc)
     fat_pred_invsc=fat_out_scaler.inverse_transform(fat_pred.reshape(1,-1))
     snf_pred=snf_model.predict(snf_in_sc)
