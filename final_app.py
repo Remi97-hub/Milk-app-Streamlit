@@ -84,17 +84,13 @@ if st.button("Calculate"):
     total_wfa=df["Weighted Fat"].sum()
     total_wsnf=df["Weighted SNF"].sum()
     total_wa=df["Weighted Average"].sum()
+    df.loc["Total"]=[total_qty,total_fat,total_snf,total_wfa,total_wsnf,total_wa]
+    #multi_cols = pd.MultiIndex.from_product([[date], df.columns])
+    date_level = [date] + [''] * (len(df.columns) - 1)
+    df.columns = pd.MultiIndex.from_arrays([date_level, df.columns])
+    st.dataframe(df)
 
-    
-
-
-df.loc["Total"]=[total_qty,total_fat,total_snf,total_wfa,total_wsnf,total_wa]
-#multi_cols = pd.MultiIndex.from_product([[date], df.columns])
-date_level = [date] + [''] * (len(df.columns) - 1)
-df.columns = pd.MultiIndex.from_arrays([date_level, df.columns])
-st.dataframe(df)
-
-csv = df.to_csv(index=False).encode("utf-8")
-st.download_button("⬇️ Download Results as CSV", csv, "milk_society_predictions.csv", "text/csv")
+    csv = df.to_csv(index=False).encode("utf-8")
+    st.download_button("⬇️ Download Results as CSV", csv, "milk_society_predictions.csv", "text/csv")
     
 
