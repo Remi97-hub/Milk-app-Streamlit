@@ -71,26 +71,22 @@ if st.button("Calculate"):
     snf_pred_invsc=snf_out_scaler.inverse_transform(snf_pred.reshape(1,-1))
     wa_pred=wa_model.predict(wa_in_sc)
     wa_pred_invsc=wa_out_scaler.inverse_transform(wa_pred.reshape(1,-1))
-    #st.write(fat_pred_invsc)
-    #st.write(snf_pred_invsc)
-    #st.write(wa_pred_invsc)
+    df=pd.DataFrame(index=societies,columns=["Quantity","Fat","SNF","Weighted Fat","Weighted SNF","Weighted Average"])
+    df["Quantity"]=quantities
+    df["Weighted Fat"]=fat_pred_invsc.flatten()
+    df["Weighted SNF"]=snf_pred_invsc.flatten()
+    df["Fat"]=np.round(df["Weighted Fat"]*100/df["Quantity"],1)
+    df["SNF"]=np.round(df["Weighted SNF"]*100/df["Quantity"],1)
+    df["Weighted Average"]=df["Weighted Fat"]+df["Weighted SNF"]
+    total_qty=sum(quantities)
+    total_fat=df["Fat"].sum()
+    total_snf=df["SNF"].sum()
+    total_wfa=df["Weighted Fat"].sum()
+    total_wsnf=df["Weighted SNF"].sum()
+    total_wa=df["Weighted Average"].sum()
 
+    
 
-df=pd.DataFrame(index=societies,columns=["Quantity","Fat","SNF","Weighted Fat","Weighted SNF","Weighted Average"])
-#df["Society"]=societies
-df["Quantity"]=quantities
-df["Weighted Fat"]=fat_pred_invsc.flatten()
-df["Weighted SNF"]=snf_pred_invsc.flatten()
-df["Fat"]=np.round(df["Weighted Fat"]*100/df["Quantity"],1)
-df["SNF"]=np.round(df["Weighted SNF"]*100/df["Quantity"],1)
-df["Weighted Average"]=df["Weighted Fat"]+df["Weighted SNF"]
-
-total_qty=sum(quantities)
-total_fat=df["Fat"].sum()
-total_snf=df["SNF"].sum()
-total_wfa=df["Weighted Fat"].sum()
-total_wsnf=df["Weighted SNF"].sum()
-total_wa=df["Weighted Average"].sum()
 
 df.loc["Total"]=[total_qty,total_fat,total_snf,total_wfa,total_wsnf,total_wa]
 #multi_cols = pd.MultiIndex.from_product([[date], df.columns])
