@@ -52,9 +52,7 @@ overall_weighted_snf=(overall_snf*total_qty)/100
 
 overall_wa=(overall_fat+overall_snf)*total_qty/100
 
-fat_in=np.array([[overall_fat,overall_weighted_fat,*quantities]])
-snf_in=np.array([[overall_snf,overall_weighted_snf,*quantities]])
-wa_in=np.array([[overall_wa,*quantities]])
+
 
 #fat_in_sc=fat_in_scaler.transform(fat_in)
 #snf_in_sc=snf_in_scaler.transform(snf_in)
@@ -62,6 +60,9 @@ wa_in=np.array([[overall_wa,*quantities]])
 
 #result=[]
 if st.button("Calculate"):
+    fat_in=np.array([[overall_fat,overall_weighted_fat,*quantities]])
+    snf_in=np.array([[overall_snf,overall_weighted_snf,*quantities]])
+    wa_in=np.array([[overall_wa,*quantities]])
     fat_in_sc=fat_in_scaler.transform(fat_in)
     snf_in_sc=snf_in_scaler.transform(snf_in)
     wa_in_sc=wa_in_scaler.transform(wa_in)
@@ -76,29 +77,30 @@ if st.button("Calculate"):
     #st.write(wa_pred_invsc)
 
 
-df=pd.DataFrame(index=societies,columns=["Quantity","Fat","SNF","Weighted Fat","Weighted SNF","Weighted Average"])
-#df["Society"]=societies
-df["Quantity"]=quantities
-df["Weighted Fat"]=fat_pred_invsc.flatten()
-df["Weighted SNF"]=snf_pred_invsc.flatten()
-df["Fat"]=np.round(df["Weighted Fat"]*100/df["Quantity"],1)
-df["SNF"]=np.round(df["Weighted SNF"]*100/df["Quantity"],1)
-df["Weighted Average"]=df["Weighted Fat"]+df["Weighted SNF"]
+    df=pd.DataFrame(index=societies,columns=["Quantity","Fat","SNF","Weighted Fat","Weighted SNF","Weighted Average"])
+    #df["Society"]=societies
+    df["Quantity"]=quantities
+    df["Weighted Fat"]=fat_pred_invsc.flatten()
+    df["Weighted SNF"]=snf_pred_invsc.flatten()
+    df["Fat"]=np.round(df["Weighted Fat"]*100/df["Quantity"],1)
+    df["SNF"]=np.round(df["Weighted SNF"]*100/df["Quantity"],1)
+    df["Weighted Average"]=df["Weighted Fat"]+df["Weighted SNF"]
 
-total_qty=sum(quantities)
-total_fat=df["Fat"].sum()
-total_snf=df["SNF"].sum()
-total_wfa=df["Weighted Fat"].sum()
-total_wsnf=df["Weighted SNF"].sum()
-total_wa=df["Weighted Average"].sum()
+    total_qty=sum(quantities)
+    total_fat=df["Fat"].sum()
+    total_snf=df["SNF"].sum()
+    total_wfa=df["Weighted Fat"].sum()
+    total_wsnf=df["Weighted SNF"].sum()
+    total_wa=df["Weighted Average"].sum()
 
-df.loc["Total"]=[total_qty,total_fat,total_snf,total_wfa,total_wsnf,total_wa]
-#multi_cols = pd.MultiIndex.from_product([[date], df.columns])
-date_level = [date] + [''] * (len(df.columns) - 1)
-df.columns = pd.MultiIndex.from_arrays([date_level, df.columns])
-st.dataframe(df)
-
-csv = df.to_csv(index=False).encode("utf-8")
-st.download_button("⬇️ Download Results as CSV", csv, "milk_society_predictions.csv", "text/csv")
+    df.loc["Total"]=[total_qty,total_fat,total_snf,total_wfa,total_wsnf,total_wa]
+    #multi_cols = pd.MultiIndex.from_product([[date], df.columns])
+    date_level = [date] + [''] * (len(df.columns) - 1)
+    df.columns = pd.MultiIndex.from_arrays([date_level, df.columns])
+    st.dataframe(df)
+    
+    csv = df.reset_index().to_csv(index=False).encode("utf-8")
+    
+    st.download_button("⬇️ Download Results as CSV", csv, "milk_society_predictions.csv", "text/csv")
     
 
