@@ -27,7 +27,7 @@ snf_model=load_file("SNF_prediction_Model_original_data.joblib")
 snf_in_scaler=load_file("Snf_input_scaler_original_data.joblib")
 snf_out_scaler=load_file("Snf_output_scaler_original_data.joblib")
 
-wa_model=load_file("Milk_Weighted_Average_Prediction.joblib")
+wa_model=load_file("Weighted_Average_prediction_Model_original_data.joblib")
 wa_in_scaler=load_file("weighted_Average_input_scaler_original_data.joblib")
 wa_out_scaler=load_file("weighted_Average_output_scaler_original_data.joblib")
 
