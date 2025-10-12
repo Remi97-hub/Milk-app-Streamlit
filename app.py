@@ -34,8 +34,8 @@ wa_out_scaler  = load_file("weighted_Average_output_scaler_original_data.joblib"
 # ------------------------------
 # Streamlit UI
 # ------------------------------
-st.title("🥛 Milk Quality Prediction App")
-st.write("Predict FAT, SNF, and Weighted Average for 5 societies using overall values.")
+st.title("🐮 Milk Quality Prediction App")
+#st.write("Predict FAT, SNF, and Weighted Average for 5 societies using overall values.")
 date=st.date_input("Date")
 
 societies = ["Eraiyur", "Naripalayam", "Ellaigramam", "Kadiyar", "Kolathur"]
@@ -55,7 +55,7 @@ overall_snf=st.number_input("Overall SNF",min_value=0.0)
 overall_weighted_snf = st.number_input("Overall Weighted SNF", min_value=0.0)
 overall_weighted_avg = st.number_input("Overall Weighted Average", min_value=0.0)
 
-if st.button("Predict for All Societies"):
+if st.button("Calculate"):
 
     results = []
 
